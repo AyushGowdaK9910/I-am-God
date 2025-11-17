@@ -56,12 +56,10 @@ jobs:
           fi
 
       - name: Upload coverage
-        if: always()
         uses: codecov/codecov-action@v3
         with:
           file: ./feature/ayush/backend/coverage/lcov.info
           flags: backend
-        continue-on-error: true
 
   # Backend Build Job
   backend-build:
