@@ -1,0 +1,219 @@
+# CON-18: Complete CI/CD Pipeline
+# Combined workflow for backend CI, frontend CI, and deployment
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ feature/ayush, main ]
+    paths:
+      - 'feature/ayush/**'
+  pull_request:
+    branches: [ feature/ayush, main ]
+    paths:
+      - 'feature/ayush/**'
+
+jobs:
+  # Backend CI Job
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: feature/ayush/backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./feature/ayush/backend
+        run: npm ci
+
+      - name: Run linter
+        working-directory: ./feature/ayush/backend
+        run: npm run lint
+
+      - name: Type check
+        working-directory: ./feature/ayush/backend
+        run: npm run typecheck
+
+      - name: Run tests
+        working-directory: ./feature/ayush/backend
+        run: npm test
+
+      - name: Generate coverage
+        working-directory: ./feature/ayush/backend
+        run: npm run test:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./feature/ayush/backend/coverage/lcov.info
+          flags: backend
+
+  # Backend Build Job
+  backend-build:
+    name: Backend Build
+    runs-on: ubuntu-latest
+    needs: backend-test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: feature/ayush/backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./feature/ayush/backend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./feature/ayush/backend
+        run: npm run build
+
+      - name: Build Docker image
+        working-directory: ./feature/ayush/backend
+        run: |
+          docker build -t conversion-backend:latest .
+
+  # Frontend CI Job
+  frontend-test:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: feature/ayush/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./feature/ayush/frontend
+        run: npm ci
+
+      - name: Run linter
+        working-directory: ./feature/ayush/frontend
+        run: npm run lint || true
+
+      - name: Type check
+        working-directory: ./feature/ayush/frontend
+        run: npm run typecheck || true
+
+      - name: Build
+        working-directory: ./feature/ayush/frontend
+        run: npm run build
+
+  # Frontend Build Job
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    needs: frontend-test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: feature/ayush/frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./feature/ayush/frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./feature/ayush/frontend
+        run: npm run build
+
+      - name: Build Docker image
+        working-directory: ./feature/ayush/frontend
+        run: |
+          docker build -t conversion-frontend:latest .
+
+  # Backend Deployment Job
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    needs: [backend-build]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Build Docker image
+        working-directory: ./feature/ayush/backend
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/backend:latest .
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to GitHub Container Registry
+        run: |
+          docker push ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+
+  # Frontend Deployment Job
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    needs: [frontend-build]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Build Docker image
+        working-directory: ./feature/ayush/frontend
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/frontend:latest .
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to GitHub Container Registry
+        run: |
+          docker push ghcr.io/${{ github.repository }}/frontend:latest
+
