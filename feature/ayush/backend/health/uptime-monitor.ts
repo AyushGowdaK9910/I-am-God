@@ -23,17 +23,32 @@ class UptimeMonitor {
    */
   getUptimePercentage(): number {
     const totalTime = Date.now() - this.startTime;
+    
+    // Handle edge case where totalTime is 0 or very small
+    if (totalTime <= 0) {
+      return 100; // If no time has passed, consider it 100% uptime
+    }
+    
     let totalDowntime = 0;
 
     for (const event of this.downtimeEvents) {
       const end = event.end || Date.now();
-      totalDowntime += end - event.start;
+      // Only count downtime that occurs within the monitoring period
+      const eventStart = Math.max(event.start, this.startTime);
+      const eventEnd = Math.min(end, Date.now());
+      
+      if (eventEnd > eventStart) {
+        totalDowntime += eventEnd - eventStart;
+      }
     }
 
-    const uptime = totalTime - totalDowntime;
+    const uptime = Math.max(0, totalTime - totalDowntime); // Ensure uptime is never negative
     const percentage = (uptime / totalTime) * 100;
 
-    return Math.round(percentage * 100) / 100; // Round to 2 decimal places
+    // Clamp percentage between 0 and 100
+    const clampedPercentage = Math.max(0, Math.min(100, percentage));
+
+    return Math.round(clampedPercentage * 100) / 100; // Round to 2 decimal places
   }
 
   /**
