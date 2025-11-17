@@ -4,7 +4,7 @@
  */
 
 import fs from 'fs';
-import { File } from 'multer';
+import { Express } from 'express';
 import { fileTypeFromFile } from 'file-type';
 import mime from 'mime-types';
 
@@ -40,7 +40,7 @@ export class FileValidationService {
   /**
    * Validate file MIME type (CON-5)
    */
-  async validateMimeType(file: File): Promise<ValidationResult> {
+  async validateMimeType(file: Express.Multer.File): Promise<ValidationResult> {
     const errors: string[] = [];
 
     // Check declared MIME type
@@ -86,7 +86,7 @@ export class FileValidationService {
   /**
    * Check if file is corrupted (CON-5)
    */
-  async checkFileCorruption(file: File): Promise<ValidationResult> {
+  async checkFileCorruption(file: Express.Multer.File): Promise<ValidationResult> {
     const errors: string[] = [];
 
     if (!file.path) {
@@ -142,7 +142,7 @@ export class FileValidationService {
   /**
    * Complete file validation (CON-5)
    */
-  async validateFile(file: File): Promise<ValidationResult> {
+  async validateFile(file: Express.Multer.File): Promise<ValidationResult> {
     const [mimeResult, corruptionResult] = await Promise.all([
       this.validateMimeType(file),
       this.checkFileCorruption(file),

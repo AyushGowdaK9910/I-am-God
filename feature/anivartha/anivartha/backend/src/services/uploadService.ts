@@ -6,8 +6,8 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { Express } from 'express';
 import { fileValidationService } from './validateFile';
-import { File } from 'multer';
 
 const uploadDir = process.env.UPLOAD_DIR || './uploads';
 
@@ -49,7 +49,7 @@ export class UploadService {
   /**
    * Handle file upload (CON-1)
    */
-  async handleUpload(file: File): Promise<UploadResult> {
+  async handleUpload(file: Express.Multer.File): Promise<UploadResult> {
     if (!file) {
       throw new Error('No file provided');
     }

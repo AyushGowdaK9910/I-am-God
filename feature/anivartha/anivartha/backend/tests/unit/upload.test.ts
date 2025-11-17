@@ -2,6 +2,11 @@
  * CON-1: Tests for upload service
  */
 
+// Mock file-type to avoid ESM import issues
+jest.mock('file-type', () => ({
+  fileTypeFromFile: jest.fn().mockResolvedValue({ mime: 'application/pdf' }),
+}));
+
 import { uploadService } from '../../src/services/uploadService';
 
 describe('UploadService', () => {
