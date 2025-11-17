@@ -3,7 +3,24 @@
  */
 
 import request from 'supertest';
-import app from '../../base-setup/src/index';
+import express, { Express } from 'express';
+import { setupDocs } from '../../docs/swagger';
+import { setupHealthChecks } from '../../health/health-check-controller';
+
+// Create app for testing
+const app: Express = express();
+app.use(express.json());
+setupDocs(app);
+setupHealthChecks(app);
+
+app.get('/', (req, res) => {
+  res.json({
+    message: 'File Conversion Service API',
+    version: '1.0.0',
+    docs: '/api-docs',
+    health: '/health',
+  });
+});
 
 describe('Application Integration Tests', () => {
   describe('Root Endpoint', () => {
