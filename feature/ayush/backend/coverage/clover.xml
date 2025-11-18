@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1763408464975" clover="3.2.0">
+  <project timestamp="1763408464975" name="All files">
+    <metrics statements="39" coveredstatements="38" conditionals="10" coveredconditionals="9" methods="10" coveredmethods="10" elements="59" coveredelements="57" complexity="0" loc="39" ncloc="39" packages="1" files="2" classes="2"/>
+    <file name="health-check-controller.ts" path="/Users/ayushgowda/Documents/DUUUPPP/I-am-God/feature/ayush/backend/health/health-check-controller.ts">
+      <metrics statements="18" coveredstatements="17" conditionals="6" coveredconditionals="5" methods="4" coveredmethods="4"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="24" count="1" type="stmt"/>
+      <line num="25" count="11" type="stmt"/>
+      <line num="26" count="11" type="stmt"/>
+      <line num="28" count="11" type="stmt"/>
+      <line num="40" count="11" type="cond" truecount="2" falsecount="0"/>
+      <line num="41" count="11" type="stmt"/>
+      <line num="47" count="1" type="stmt"/>
+      <line num="49" count="5" type="stmt"/>
+      <line num="51" count="5" type="cond" truecount="1" falsecount="1"/>
+      <line num="52" count="5" type="stmt"/>
+      <line num="57" count="0" type="stmt"/>
+      <line num="67" count="1" type="stmt"/>
+      <line num="68" count="2" type="stmt"/>
+      <line num="77" count="1" type="stmt"/>
+      <line num="78" count="16" type="stmt"/>
+      <line num="79" count="16" type="stmt"/>
+      <line num="80" count="16" type="stmt"/>
+    </file>
+    <file name="uptime-monitor.ts" path="/Users/ayushgowda/Documents/DUUUPPP/I-am-God/feature/ayush/backend/health/uptime-monitor.ts">
+      <metrics statements="21" coveredstatements="21" conditionals="4" coveredconditionals="4" methods="6" coveredmethods="6"/>
+      <line num="8" count="3" type="stmt"/>
+      <line num="11" count="3" type="stmt"/>
+      <line num="18" count="10" type="stmt"/>
+      <line num="25" count="13" type="stmt"/>
+      <line num="28" count="13" type="cond" truecount="1" falsecount="0"/>
+      <line num="29" count="2" type="stmt"/>
+      <line num="32" count="11" type="stmt"/>
+      <line num="34" count="11" type="stmt"/>
+      <line num="35" count="31" type="cond" truecount="2" falsecount="0"/>
+      <line num="37" count="31" type="stmt"/>
+      <line num="38" count="31" type="stmt"/>
+      <line num="40" count="31" type="cond" truecount="1" falsecount="0"/>
+      <line num="41" count="10" type="stmt"/>
+      <line num="45" count="11" type="stmt"/>
+      <line num="46" count="11" type="stmt"/>
+      <line num="49" count="11" type="stmt"/>
+      <line num="51" count="11" type="stmt"/>
+      <line num="58" count="6" type="stmt"/>
+      <line num="65" count="8" type="stmt"/>
+      <line num="72" count="4" type="stmt"/>
+      <line num="82" count="3" type="stmt"/>
+    </file>
+  </project>
+</coverage>
