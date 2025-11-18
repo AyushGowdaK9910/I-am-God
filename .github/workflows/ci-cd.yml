@@ -119,8 +119,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./feature/ayush/frontend
         run: |
-          # Use npm install instead of npm ci to properly handle optional dependencies
-          # npm install respects package-lock.json but also installs platform-specific optional deps
+          # Remove node_modules and package-lock.json to avoid platform-specific issues
+          rm -rf node_modules package-lock.json
+          # Install dependencies (npm install handles optional dependencies better than npm ci)
           npm install
 
       - name: Run linter
@@ -155,8 +156,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./feature/ayush/frontend
         run: |
-          # Use npm install instead of npm ci to properly handle optional dependencies
-          # npm install respects package-lock.json but also installs platform-specific optional deps
+          # Remove node_modules and package-lock.json to avoid platform-specific issues
+          rm -rf node_modules package-lock.json
+          # Install dependencies (npm install handles optional dependencies better than npm ci)
           npm install
 
       - name: Build
