@@ -118,7 +118,14 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./feature/ayush/frontend
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+          # Ensure optional dependencies are installed (fix for Rollup platform-specific binaries)
+          npm install --no-save @rollup/rollup-linux-x64-gnu || true
 
       - name: Run linter
         working-directory: ./feature/ayush/frontend
@@ -151,7 +158,14 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./feature/ayush/frontend
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+          # Ensure optional dependencies are installed (fix for Rollup platform-specific binaries)
+          npm install --no-save @rollup/rollup-linux-x64-gnu || true
 
       - name: Build
         working-directory: ./feature/ayush/frontend
