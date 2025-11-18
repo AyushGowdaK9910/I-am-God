@@ -298,6 +298,7 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "build": "tsc",
     "lint": "eslint . --ext .ts || true",
     "lint:fix": "eslint . --ext .ts --fix || true",
     "typecheck": "tsc --noEmit"
