@@ -46,20 +46,29 @@ jobs:
         run: npm test
         continue-on-error: true
 
-      - name: Generate coverage
+      - name: Check if test:coverage script exists
+        id: check_coverage
         working-directory: ./feature/ayush/backend
         run: |
           if [ -f package.json ] && grep -q '"test:coverage"' package.json; then
-            npm run test:coverage
+            echo "has_coverage=true" >> $GITHUB_OUTPUT
           else
+            echo "has_coverage=false" >> $GITHUB_OUTPUT
             echo "test:coverage script not found in package.json, skipping coverage"
           fi
 
+      - name: Generate coverage
+        if: steps.check_coverage.outputs.has_coverage == 'true'
+        working-directory: ./feature/ayush/backend
+        run: npm run test:coverage
+
       - name: Upload coverage
+        if: steps.check_coverage.outputs.has_coverage == 'true'
         uses: codecov/codecov-action@v3
         with:
           file: ./feature/ayush/backend/coverage/lcov.info
           flags: backend
+          fail_ci_if_error: false
 
   # Backend Build Job
   backend-build:
