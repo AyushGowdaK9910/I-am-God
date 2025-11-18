@@ -86,17 +86,10 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: feature/ayush/backend/package-lock.json
-        continue-on-error: true
 
       - name: Install dependencies
         working-directory: ./feature/ayush/backend
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "package-lock.json not found, using npm install"
-            npm install
-          fi
+        run: npm ci
 
       - name: Build
         working-directory: ./feature/ayush/backend
@@ -155,17 +148,10 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: feature/ayush/frontend/package-lock.json
-        continue-on-error: true
 
       - name: Install dependencies
         working-directory: ./feature/ayush/frontend
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "package-lock.json not found, using npm install"
-            npm install
-          fi
+        run: npm ci
 
       - name: Build
         working-directory: ./feature/ayush/frontend
