@@ -5,6 +5,7 @@
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "build": "tsc && vite build",
     "lint": "eslint . --ext .ts,.tsx || true",
     "lint:fix": "eslint . --ext .ts,.tsx --fix || true"
   },
